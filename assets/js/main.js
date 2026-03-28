@@ -1,4 +1,3 @@
-// ==================== WAVE ANIMATION ====================
 let time = 0;
 const waveData = {};
 
@@ -9,17 +8,17 @@ function initWaveData() {
             offset1: Math.random() * Math.PI * 2,
             offset2: Math.random() * Math.PI * 2,
             offset3: Math.random() * Math.PI * 2,
-            speed1: 0.00015 + Math.random() * 0.00012,
-            speed2: 0.0001 + Math.random() * 0.00008,
-            speed3: 0.00007 + Math.random() * 0.00006,
-            amp1: 20 + Math.random() * 25,
-            amp2: 12 + Math.random() * 18,
-            amp3: 8 + Math.random() * 12
+            speed1: 0.00008 + Math.random() * 0.00006,
+            speed2: 0.00005 + Math.random() * 0.00004,
+            speed3: 0.00003 + Math.random() * 0.00003,
+            amp1: 25 + Math.random() * 30,
+            amp2: 15 + Math.random() * 20,
+            amp3: 10 + Math.random() * 15
         };
     });
 }
 
-// Multi-layer wave function for organic random movement
+// Multi-layer wave function for organic ocean-like movement
 function getWaveValue(t, data) {
     const w1 = Math.sin(t * data.speed1 + data.offset1) * data.amp1;
     const w2 = Math.sin(t * data.speed2 + data.offset2) * data.amp2;
@@ -27,6 +26,7 @@ function getWaveValue(t, data) {
     return w1 + w2 + w3;
 }
 
+// Animate Top Right Corner Waves
 function animateTopRight(t) {
     const outlines = [
         { id: 'tr-out-1', startX: 900, cp1x: 1200, cp1y: 0, cp2x: 1500, cp2y: 150, endX: 1920, endY: 550 },
@@ -41,10 +41,10 @@ function animateTopRight(t) {
         const data = waveData[o.id];
         const wave = getWaveValue(t, data);
         
-        const cp1y = o.cp1y + wave * 0.35;
-        const cp2y = o.cp2y + wave * 0.55;
-        const cp2x = o.cp2x + Math.sin(t * data.speed2 * 1.5 + data.offset2) * 12;
-        const endY = o.endY + wave * 0.3;
+        const cp1y = o.cp1y + wave * 0.4;
+        const cp2y = o.cp2y + wave * 0.6;
+        const cp2x = o.cp2x + Math.sin(t * data.speed2 * 1.5 + data.offset2) * 15;
+        const endY = o.endY + wave * 0.35;
 
         el.setAttribute('d', `M${o.startX},0 C${o.cp1x},${cp1y} ${cp2x},${cp2y} ${o.endX},${endY}`);
     });
@@ -56,19 +56,20 @@ function animateTopRight(t) {
         const wave = getWaveValue(t, data);
 
         const startX = 600 + i * 50;
-        const cp1x = 900 + i * 50 + wave * 0.45;
-        const cp1y = Math.sin(t * data.speed1 * 1.2 + data.offset1) * 10;
-        const cp2x = 1200 + i * 50 + wave * 0.65;
-        const cp2y = 100 + i * 25 + wave * 0.4;
-        const endY = 350 + i * 40 + wave * 0.25;
+        const cp1x = 900 + i * 50 + wave * 0.5;
+        const cp1y = Math.sin(t * data.speed1 * 1.2 + data.offset1) * 12;
+        const cp2x = 1200 + i * 50 + wave * 0.7;
+        const cp2y = 100 + i * 25 + wave * 0.45;
+        const endY = 350 + i * 40 + wave * 0.3;
 
         el.setAttribute('d', `M${startX},0 C${cp1x},${cp1y} ${cp2x},${cp2y} 1920,${endY}`);
         
-        const opacity = 0.28 + Math.sin(t * 0.0007 + i * 0.3 + data.offset1) * 0.14;
+        const opacity = 0.28 + Math.sin(t * 0.0005 + i * 0.3 + data.offset1) * 0.14;
         el.style.opacity = Math.max(0.2, Math.min(0.5, opacity));
     }
 }
 
+// Animate Bottom Left Corner Waves
 function animateBottomLeft(t) {
     const outlines = [
         { id: 'bl-out-1', startY: 580, cp1y: 800, cp2x: 350, cp2y: 1080, endX: 770, endY: 1080 },
@@ -83,10 +84,10 @@ function animateBottomLeft(t) {
         const data = waveData[o.id];
         const wave = getWaveValue(t, data);
 
-        const cp1y = o.cp1y + wave * 0.45;
-        const cp2x = o.cp2x + wave * 0.35;
-        const cp2y = o.cp2y + Math.sin(t * data.speed2 * 1.5 + data.offset2) * 8;
-        const endX = o.endX + wave * 0.25;
+        const cp1y = o.cp1y + wave * 0.5;
+        const cp2x = o.cp2x + wave * 0.4;
+        const cp2y = o.cp2y + Math.sin(t * data.speed2 * 1.5 + data.offset2) * 10;
+        const endX = o.endX + wave * 0.3;
 
         el.setAttribute('d', `M0,${o.startY} C0,${cp1y} ${cp2x},${cp2y} ${endX},1080`);
     });
@@ -98,14 +99,14 @@ function animateBottomLeft(t) {
         const wave = getWaveValue(t, data);
 
         const startY = 450 + i * 20;
-        const cp1y = 700 + i * 22 + wave * 0.55;
-        const cp2x = 400 + i * 28 + wave * 0.4;
-        const cp2y = 1000 + wave * 0.3;
-        const endX = 850 + i * 35 + wave * 0.22;
+        const cp1y = 700 + i * 22 + wave * 0.6;
+        const cp2x = 400 + i * 28 + wave * 0.45;
+        const cp2y = 1000 + wave * 0.35;
+        const endX = 850 + i * 35 + wave * 0.25;
 
         el.setAttribute('d', `M0,${startY} C0,${cp1y} ${cp2x},${cp2y} ${endX},1080`);
         
-        const opacity = 0.28 + Math.sin(t * 0.0007 + i * 0.3 + data.offset1 + 1) * 0.14;
+        const opacity = 0.28 + Math.sin(t * 0.0005 + i * 0.3 + data.offset1 + 1) * 0.14;
         el.style.opacity = Math.max(0.2, Math.min(0.5, opacity));
     }
 }
@@ -276,3 +277,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     window.addEventListener('resize', resize);
 });
+
+
+              </script>
+                        </body>
+                        </html>
+                    
