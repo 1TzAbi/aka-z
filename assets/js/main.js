@@ -29,6 +29,9 @@ function getWaveValue(t, data) {
 
 // Animate Top Right Corner Waves
 function animateTopRight(t) {
+    const pulse = clickWaveBoost.topRight;
+    const pulseStrength = 1 + pulse * 2.8;
+
     const outlines = [
         { id: 'tr-out-1', startX: 900, cp1x: 1200, cp1y: 0, cp2x: 1500, cp2y: 150, endX: 1920, endY: 550 },
         { id: 'tr-out-2', startX: 950, cp1x: 1250, cp1y: 0, cp2x: 1550, cp2y: 180, endX: 1920, endY: 600 },
@@ -40,7 +43,7 @@ function animateTopRight(t) {
         const el = document.getElementById(o.id);
         if (!el) return;
         const data = waveData[o.id];
-        const wave = getWaveValue(t, data);
+        const wave = getWaveValue(t, data) * pulseStrength;
         
         const cp1y = o.cp1y + wave * 0.4;
         const cp2y = o.cp2y + wave * 0.6;
@@ -54,7 +57,7 @@ function animateTopRight(t) {
         const el = document.getElementById(`tr-s-${i}`);
         if (!el) continue;
         const data = waveData[`tr-s-${i}`];
-        const wave = getWaveValue(t, data);
+        const wave = getWaveValue(t, data) * pulseStrength;
 
         const startX = 600 + i * 50;
         const cp1x = 900 + i * 50 + wave * 0.5;
@@ -72,6 +75,9 @@ function animateTopRight(t) {
 
 // Animate Bottom Left Corner Waves
 function animateBottomLeft(t) {
+    const pulse = clickWaveBoost.bottomLeft;
+    const pulseStrength = 1 + pulse * 2.8;
+
     const outlines = [
         { id: 'bl-out-1', startY: 580, cp1y: 800, cp2x: 350, cp2y: 1080, endX: 770, endY: 1080 },
         { id: 'bl-out-2', startY: 600, cp1y: 830, cp2x: 390, cp2y: 1080, endX: 820, endY: 1080 },
@@ -83,7 +89,7 @@ function animateBottomLeft(t) {
         const el = document.getElementById(o.id);
         if (!el) return;
         const data = waveData[o.id];
-        const wave = getWaveValue(t, data);
+        const wave = getWaveValue(t, data) * pulseStrength;
 
         const cp1y = o.cp1y + wave * 0.5;
         const cp2x = o.cp2x + wave * 0.4;
@@ -97,7 +103,7 @@ function animateBottomLeft(t) {
         const el = document.getElementById(`bl-s-${i}`);
         if (!el) continue;
         const data = waveData[`bl-s-${i}`];
-        const wave = getWaveValue(t, data);
+        const wave = getWaveValue(t, data) * pulseStrength;
 
         const startY = 450 + i * 20;
         const cp1y = 700 + i * 22 + wave * 0.6;
@@ -116,6 +122,8 @@ function animateWaves() {
     time += 16;
     animateTopRight(time);
     animateBottomLeft(time);
+    clickWaveBoost.topRight *= 0.9;
+    clickWaveBoost.bottomLeft *= 0.9;
     requestAnimationFrame(animateWaves);
 }
 
@@ -126,6 +134,10 @@ const ctx = canvas.getContext('2d');
 let width, height;
 let stars = [];
 let shootingStars = [];
+const clickWaveBoost = {
+    topRight: 0,
+    bottomLeft: 0
+};
 
 const STAR_COUNT = 180;
 const SHOOTING_STAR_CHANCE = 0.01;
@@ -181,9 +193,10 @@ class ShootingStar {
         this.fadeIn = true;
     }
 
-    activate() {
-        this.x = Math.random() * width * 0.3 + width * 0.15;
-        this.y = -80;
+    activate(originX = null, originY = null, angle = null) {
+        this.x = originX ?? (Math.random() * width * 0.3 + width * 0.15);
+        this.y = originY ?? -80;
+        this.angle = angle ?? (Math.PI / 4 + (Math.random() * 0.25 - 0.12));
         this.opacity = 0;
         this.active = true;
         this.fadeIn = true;
@@ -269,12 +282,57 @@ function animateStars() {
     requestAnimationFrame(animateStars);
 }
 
+function createShootingStarBurst(mouseX, mouseY) {
+    const available = shootingStars.filter(star => !star.active).slice(0, 3);
+    const originX = Math.max(20, Math.min(width - 20, mouseX));
+    const originY = Math.max(20, Math.min(height - 20, mouseY));
+
+    available.forEach((star, index) => {
+        const angleSpread = (Math.random() - 0.5) * 0.55;
+        const baseAngle = Math.PI / 4 + angleSpread;
+        const jitterX = (Math.random() - 0.5) * 30;
+        const jitterY = (Math.random() - 0.5) * 30;
+
+        star.activate(
+            originX + jitterX,
+            originY + jitterY,
+            baseAngle + (index - 1) * 0.06
+        );
+    });
+}
+
+function bumpWave(section) {
+    if (section === 'top-right') {
+        clickWaveBoost.topRight = 1;
+    } else if (section === 'bottom-left') {
+        clickWaveBoost.bottomLeft = 1;
+    }
+}
+
+function setupMouseInteractions() {
+    document.addEventListener('click', (event) => {
+        createShootingStarBurst(event.clientX, event.clientY);
+    });
+
+    const topRightZone = document.getElementById('top-right-zone');
+    const bottomLeftZone = document.getElementById('bottom-left-zone');
+
+    if (topRightZone) {
+        topRightZone.addEventListener('click', () => bumpWave('top-right'));
+    }
+
+    if (bottomLeftZone) {
+        bottomLeftZone.addEventListener('click', () => bumpWave('bottom-left'));
+    }
+}
+
 // ==================== INITIALIZE ====================
 document.addEventListener('DOMContentLoaded', () => {
     initWaveData();
     resize();
     animateWaves();
     animateStars();
+    setupMouseInteractions();
     
     window.addEventListener('resize', resize);
 });
