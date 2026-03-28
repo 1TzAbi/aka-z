@@ -4,6 +4,7 @@ const waveData = {};
 
 // Initialize random wave data for each element
 function initWaveData() {
+    @@ -7,147 +7,159 @@ function initWaveData() {
     document.querySelectorAll('.wave-outline, .strand').forEach((el) => {
         waveData[el.id] = {
             offset1: Math.random() * Math.PI * 2,
@@ -43,6 +44,7 @@ function animateTopRight(t) {
         const el = document.getElementById(o.id);
         if (!el) return;
         const data = waveData[o.id];
+        const wave = getWaveValue(t, data);
         const wave = getWaveValue(t, data) * pulseStrength;
         
         const cp1y = o.cp1y + wave * 0.4;
@@ -57,6 +59,7 @@ function animateTopRight(t) {
         const el = document.getElementById(`tr-s-${i}`);
         if (!el) continue;
         const data = waveData[`tr-s-${i}`];
+        const wave = getWaveValue(t, data);
         const wave = getWaveValue(t, data) * pulseStrength;
 
         const startX = 600 + i * 50;
@@ -89,6 +92,7 @@ function animateBottomLeft(t) {
         const el = document.getElementById(o.id);
         if (!el) return;
         const data = waveData[o.id];
+        const wave = getWaveValue(t, data);
         const wave = getWaveValue(t, data) * pulseStrength;
 
         const cp1y = o.cp1y + wave * 0.5;
@@ -103,6 +107,7 @@ function animateBottomLeft(t) {
         const el = document.getElementById(`bl-s-${i}`);
         if (!el) continue;
         const data = waveData[`bl-s-${i}`];
+        const wave = getWaveValue(t, data);
         const wave = getWaveValue(t, data) * pulseStrength;
 
         const startY = 450 + i * 20;
@@ -163,11 +168,7 @@ class Star {
         this.twinkleSpeed = Math.random() * 0.008 + 0.004;
         this.twinkleOffset = Math.random() * Math.PI * 2;
     }
-
-    update(t) {
-        this.opacity = this.baseOpacity + Math.sin(t * this.twinkleSpeed + this.twinkleOffset) * 0.18;
-        this.opacity = Math.max(0.2, Math.min(0.75, this.opacity));
-    }
+@@ -159,53 +171,54 @@ class Star {
 
     draw() {
         ctx.beginPath();
@@ -193,6 +194,9 @@ class ShootingStar {
         this.fadeIn = true;
     }
 
+    activate() {
+        this.x = Math.random() * width * 0.3 + width * 0.15;
+        this.y = -80;
     activate(originX = null, originY = null, angle = null) {
         this.x = originX ?? (Math.random() * width * 0.3 + width * 0.15);
         this.y = originY ?? -80;
@@ -222,41 +226,7 @@ class ShootingStar {
     }
 
     draw() {
-        if (!this.active || this.opacity <= 0) return;
-
-        const tailX = this.x - Math.cos(this.angle) * this.length;
-        const tailY = this.y - Math.sin(this.angle) * this.length;
-
-        const gradient = ctx.createLinearGradient(this.x, this.y, tailX, tailY);
-        gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
-        gradient.addColorStop(0.4, `rgba(180, 210, 255, ${this.opacity * 0.6})`);
-        gradient.addColorStop(1, `rgba(100, 150, 220, 0)`);
-
-        ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(tailX, tailY);
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = 1.8;
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-        ctx.fill();
-    }
-}
-
-function initStars() {
-    stars = [];
-    shootingStars = [];
-
-    for (let i = 0; i < STAR_COUNT; i++) {
-        stars.push(new Star());
-    }
-
-    for (let i = 0; i < 4; i++) {
-        shootingStars.push(new ShootingStar());
-    }
+@@ -247,34 +260,79 @@ function initStars() {
 }
 
 let starTime = 0;
