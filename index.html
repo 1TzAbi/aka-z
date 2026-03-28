@@ -1,1 +1,112 @@
-<canvas id="bg"></canvas>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Name - Home</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Wave Background -->
+    <div class="wave-border">
+        <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" id="waveSvg">
+            <!-- TOP RIGHT CORNER -->
+            <g id="top-right">
+                <path class="wave-outline" id="tr-out-1" d="M900,0 C1200,0 1500,150 1920,550"/>
+                <path class="wave-outline" id="tr-out-2" d="M950,0 C1250,0 1550,180 1920,600"/>
+                <path class="wave-outline" id="tr-out-3" d="M1000,0 C1300,0 1600,210 1920,650"/>
+                <path class="wave-outline" id="tr-out-4" d="M1050,0 C1350,0 1650,240 1920,700"/>
+                
+                <path class="strand" id="tr-s-0" d="M600,0 C900,0 1200,100 1920,350"/>
+                <path class="strand" id="tr-s-1" d="M650,0 C950,0 1250,130 1920,390"/>
+                <path class="strand" id="tr-s-2" d="M700,0 C1000,0 1300,160 1920,430"/>
+                <path class="strand" id="tr-s-3" d="M750,0 C1050,0 1350,190 1920,470"/>
+                <path class="strand" id="tr-s-4" d="M800,0 C1100,0 1400,220 1920,510"/>
+                <path class="strand" id="tr-s-5" d="M850,0 C1150,0 1450,250 1920,550"/>
+                <path class="strand" id="tr-s-6" d="M900,0 C1200,0 1500,280 1920,590"/>
+                <path class="strand" id="tr-s-7" d="M950,0 C1250,0 1550,310 1920,630"/>
+                <path class="strand" id="tr-s-8" d="M1000,0 C1300,0 1600,340 1920,670"/>
+                <path class="strand" id="tr-s-9" d="M1050,0 C1350,0 1650,370 1920,710"/>
+                <path class="strand" id="tr-s-10" d="M1100,0 C1400,0 1700,400 1920,750"/>
+                <path class="strand" id="tr-s-11" d="M1150,0 C1450,0 1750,430 1920,790"/>
+                <path class="strand" id="tr-s-12" d="M1200,0 C1500,0 1800,460 1920,830"/>
+                <path class="strand" id="tr-s-13" d="M1250,0 C1550,0 1850,490 1920,870"/>
+                <path class="strand" id="tr-s-14" d="M1300,0 C1600,0 1900,520 1920,910"/>
+                <path class="strand" id="tr-s-15" d="M1350,0 C1650,0 1920,550 1920,950"/>
+                <path class="strand" id="tr-s-16" d="M1400,0 C1700,0 1920,580 1920,990"/>
+                <path class="strand" id="tr-s-17" d="M1450,0 C1750,0 1920,610 1920,1030"/>
+                <path class="strand" id="tr-s-18" d="M1500,0 C1800,0 1920,640 1920,1070"/>
+            </g>
+
+            <!-- BOTTOM LEFT CORNER -->
+            <g id="bottom-left">
+                <path class="wave-outline" id="bl-out-1" d="M0,580 C0,800 350,1080 770,1080"/>
+                <path class="wave-outline" id="bl-out-2" d="M0,600 C0,830 390,1080 820,1080"/>
+                <path class="wave-outline" id="bl-out-3" d="M0,620 C0,860 430,1080 870,1080"/>
+                <path class="wave-outline" id="bl-out-4" d="M0,640 C0,890 470,1080 920,1080"/>
+                
+                <path class="strand" id="bl-s-0" d="M0,450 C0,700 400,1080 850,1080"/>
+                <path class="strand" id="bl-s-1" d="M0,470 C0,730 440,1080 900,1080"/>
+                <path class="strand" id="bl-s-2" d="M0,490 C0,760 480,1080 950,1080"/>
+                <path class="strand" id="bl-s-3" d="M0,510 C0,790 520,1080 1000,1080"/>
+                <path class="strand" id="bl-s-4" d="M0,530 C0,820 560,1080 1050,1080"/>
+                <path class="strand" id="bl-s-5" d="M0,550 C0,850 600,1080 1100,1080"/>
+                <path class="strand" id="bl-s-6" d="M0,570 C0,880 640,1080 1150,1080"/>
+                <path class="strand" id="bl-s-7" d="M0,590 C0,910 680,1080 1200,1080"/>
+                <path class="strand" id="bl-s-8" d="M0,610 C0,940 720,1080 1250,1080"/>
+                <path class="strand" id="bl-s-9" d="M0,630 C0,970 760,1080 1300,1080"/>
+                <path class="strand" id="bl-s-10" d="M0,650 C0,1000 800,1080 1350,1080"/>
+                <path class="strand" id="bl-s-11" d="M0,670 C0,1030 840,1080 1400,1080"/>
+                <path class="strand" id="bl-s-12" d="M0,690 C0,1050 880,1080 1450,1080"/>
+                <path class="strand" id="bl-s-13" d="M0,710 C0,1070 920,1080 1500,1080"/>
+                <path class="strand" id="bl-s-14" d="M0,730 C0,1080 960,1080 1550,1080"/>
+                <path class="strand" id="bl-s-15" d="M0,750 C0,1080 1000,1080 1600,1080"/>
+                <path class="strand" id="bl-s-16" d="M0,770 C0,1080 1040,1080 1650,1080"/>
+                <path class="strand" id="bl-s-17" d="M0,790 C0,1080 1080,1080 1700,1080"/>
+                <path class="strand" id="bl-s-18" d="M0,810 C0,1080 1120,1080 1750,1080"/>
+            </g>
+        </svg>
+    </div>
+
+    <!-- Starfield Canvas -->
+    <div class="starfield">
+        <canvas id="starCanvas"></canvas>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <nav>
+            <a href="index.html" class="logo">Your Name</a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <h1 class="page-title">Welcome</h1>
+            <p class="page-subtitle">Developer · Designer · Creator</p>
+
+            <div class="section">
+                <h2 class="section-title">Featured Projects</h2>
+                <div class="projects-grid">
+                    <div class="project-card" onclick="window.location.href='projects.html'">
+                        <img src="assets/images/project.jpg" alt="Project" class="project-image">
+                        <div class="project-info">
+                            <h3 class="project-title">Project Name</h3>
+                            <p class="project-description">A brief description of your featured project goes here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 Your Name. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
