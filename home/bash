@@ -1,0 +1,5 @@
+mkdir home
+cp index.html home/index.html  # or create your home page content
+git add home/
+git commit -m "Add /home route"
+git push
