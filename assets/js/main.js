@@ -1,3 +1,17 @@
+/* OLD (blue-purple) */
+background: linear-gradient(135deg, #050510 0%, #0a0a20 50%, #051020 100%);
+
+/* NEW (dark grey) */
+background: linear-gradient(135deg, #0a0a0a 0%, #121212 50%, #0f0f0f 100%);
+
+
+              </style>
+                        </head>
+                        <body>
+                            
+
+              <script>
+                              // ==================== WAVE ANIMATION ====================
 let time = 0;
 const waveData = {};
 
