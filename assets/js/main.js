@@ -152,4 +152,127 @@ class Star {
 
     update(t) {
         this.opacity = this.baseOpacity + Math.sin(t * this.twinkleSpeed + this.twinkleOffset) * 0.18;
-        this.opacity
+        this.opacity = Math.max(0.2, Math.min(0.75, this.opacity));
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        ctx.fill();
+    }
+}
+
+class ShootingStar {
+    constructor() {
+        this.reset();
+    }
+
+    reset() {
+        this.x = Math.random() * width * 0.4;
+        this.y = -80;
+        this.length = Math.random() * 120 + 60;
+        this.speed = Math.random() * 3.5 + 2;
+        this.angle = Math.PI / 4 + (Math.random() * 0.25 - 0.12);
+        this.opacity = 0;
+        this.active = false;
+        this.fadeIn = true;
+    }
+
+    activate() {
+        this.x = Math.random() * width * 0.3 + width * 0.15;
+        this.y = -80;
+        this.opacity = 0;
+        this.active = true;
+        this.fadeIn = true;
+    }
+
+    update() {
+        if (!this.active) return;
+
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed;
+
+        if (this.fadeIn) {
+            this.opacity += 0.04;
+            if (this.opacity >= 0.9) this.fadeIn = false;
+        } else {
+            this.opacity -= 0.01;
+        }
+
+        if (this.opacity <= 0 || this.x > width + 150 || this.y > height + 150) {
+            this.active = false;
+            this.reset();
+        }
+    }
+
+    draw() {
+        if (!this.active || this.opacity <= 0) return;
+
+        const tailX = this.x - Math.cos(this.angle) * this.length;
+        const tailY = this.y - Math.sin(this.angle) * this.length;
+
+        const gradient = ctx.createLinearGradient(this.x, this.y, tailX, tailY);
+        gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity})`);
+        gradient.addColorStop(0.4, `rgba(180, 210, 255, ${this.opacity * 0.6})`);
+        gradient.addColorStop(1, `rgba(100, 150, 220, 0)`);
+
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(tailX, tailY);
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        ctx.fill();
+    }
+}
+
+function initStars() {
+    stars = [];
+    shootingStars = [];
+
+    for (let i = 0; i < STAR_COUNT; i++) {
+        stars.push(new Star());
+    }
+
+    for (let i = 0; i < 4; i++) {
+        shootingStars.push(new ShootingStar());
+    }
+}
+
+let starTime = 0;
+function animateStars() {
+    starTime += 16;
+    ctx.clearRect(0, 0, width, height);
+
+    stars.forEach(star => {
+        star.update(starTime);
+        star.draw();
+    });
+
+    if (Math.random() < SHOOTING_STAR_CHANCE) {
+        const inactive = shootingStars.find(s => !s.active);
+        if (inactive) inactive.activate();
+    }
+
+    shootingStars.forEach(star => {
+        star.update();
+        star.draw();
+    });
+
+    requestAnimationFrame(animateStars);
+}
+
+// ==================== INITIALIZE ====================
+document.addEventListener('DOMContentLoaded', () => {
+    initWaveData();
+    resize();
+    animateWaves();
+    animateStars();
+    
+    window.addEventListener('resize', resize);
+});
