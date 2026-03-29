@@ -1,308 +1,190 @@
-// ==================== WAVE ANIMATION ====================
-let time = 0;
-const waveData = {};
-
-// Initialize random wave data for each element
-function initWaveData() {
-    @@ -7,147 +7,159 @@ function initWaveData() {
-    document.querySelectorAll('.wave-outline, .strand').forEach((el) => {
-        waveData[el.id] = {
-            offset1: Math.random() * Math.PI * 2,
-            offset2: Math.random() * Math.PI * 2,
-            offset3: Math.random() * Math.PI * 2,
-            speed1: 0.00008 + Math.random() * 0.00006,
-            speed2: 0.00005 + Math.random() * 0.00004,
-            speed3: 0.00003 + Math.random() * 0.00003,
-            amp1: 25 + Math.random() * 30,
-            amp2: 15 + Math.random() * 20,
-            amp3: 10 + Math.random() * 15
-        };
-    });
-}
-
-// Multi-layer wave function for organic ocean-like movement
-function getWaveValue(t, data) {
-    const w1 = Math.sin(t * data.speed1 + data.offset1) * data.amp1;
-    const w2 = Math.sin(t * data.speed2 + data.offset2) * data.amp2;
-    const w3 = Math.sin(t * data.speed3 + data.offset3) * data.amp3;
-    return w1 + w2 + w3;
-}
-
-// Animate Top Right Corner Waves
-function animateTopRight(t) {
-    const pulse = clickWaveBoost.topRight;
-    const pulseStrength = 1 + pulse * 2.8;
-
-    const outlines = [
-        { id: 'tr-out-1', startX: 900, cp1x: 1200, cp1y: 0, cp2x: 1500, cp2y: 150, endX: 1920, endY: 550 },
-        { id: 'tr-out-2', startX: 950, cp1x: 1250, cp1y: 0, cp2x: 1550, cp2y: 180, endX: 1920, endY: 600 },
-        { id: 'tr-out-3', startX: 1000, cp1x: 1300, cp1y: 0, cp2x: 1600, cp2y: 210, endX: 1920, endY: 650 },
-        { id: 'tr-out-4', startX: 1050, cp1x: 1350, cp1y: 0, cp2x: 1650, cp2y: 240, endX: 1920, endY: 700 }
-    ];
-
-    outlines.forEach(o => {
-        const el = document.getElementById(o.id);
-        if (!el) return;
-        const data = waveData[o.id];
-        const wave = getWaveValue(t, data);
-        const wave = getWaveValue(t, data) * pulseStrength;
-        
-        const cp1y = o.cp1y + wave * 0.4;
-        const cp2y = o.cp2y + wave * 0.6;
-        const cp2x = o.cp2x + Math.sin(t * data.speed2 * 1.5 + data.offset2) * 15;
-        const endY = o.endY + wave * 0.35;
-
-        el.setAttribute('d', `M${o.startX},0 C${o.cp1x},${cp1y} ${cp2x},${cp2y} ${o.endX},${endY}`);
-    });
-
-    for (let i = 0; i <= 18; i++) {
-        const el = document.getElementById(`tr-s-${i}`);
-        if (!el) continue;
-        const data = waveData[`tr-s-${i}`];
-        const wave = getWaveValue(t, data);
-        const wave = getWaveValue(t, data) * pulseStrength;
-
-        const startX = 600 + i * 50;
-        const cp1x = 900 + i * 50 + wave * 0.5;
-        const cp1y = Math.sin(t * data.speed1 * 1.2 + data.offset1) * 12;
-        const cp2x = 1200 + i * 50 + wave * 0.7;
-        const cp2y = 100 + i * 25 + wave * 0.45;
-        const endY = 350 + i * 40 + wave * 0.3;
-
-        el.setAttribute('d', `M${startX},0 C${cp1x},${cp1y} ${cp2x},${cp2y} 1920,${endY}`);
-        
-        const opacity = 0.28 + Math.sin(t * 0.0005 + i * 0.3 + data.offset1) * 0.14;
-        el.style.opacity = Math.max(0.2, Math.min(0.5, opacity));
-    }
-}
-
-// Animate Bottom Left Corner Waves
-function animateBottomLeft(t) {
-    const pulse = clickWaveBoost.bottomLeft;
-    const pulseStrength = 1 + pulse * 2.8;
-
-    const outlines = [
-        { id: 'bl-out-1', startY: 580, cp1y: 800, cp2x: 350, cp2y: 1080, endX: 770, endY: 1080 },
-        { id: 'bl-out-2', startY: 600, cp1y: 830, cp2x: 390, cp2y: 1080, endX: 820, endY: 1080 },
-        { id: 'bl-out-3', startY: 620, cp1y: 860, cp2x: 430, cp2y: 1080, endX: 870, endY: 1080 },
-        { id: 'bl-out-4', startY: 640, cp1y: 890, cp2x: 470, cp2y: 1080, endX: 920, endY: 1080 }
-    ];
-
-    outlines.forEach((o) => {
-        const el = document.getElementById(o.id);
-        if (!el) return;
-        const data = waveData[o.id];
-        const wave = getWaveValue(t, data);
-        const wave = getWaveValue(t, data) * pulseStrength;
-
-        const cp1y = o.cp1y + wave * 0.5;
-        const cp2x = o.cp2x + wave * 0.4;
-        const cp2y = o.cp2y + Math.sin(t * data.speed2 * 1.5 + data.offset2) * 10;
-        const endX = o.endX + wave * 0.3;
-
-        el.setAttribute('d', `M0,${o.startY} C0,${cp1y} ${cp2x},${cp2y} ${endX},1080`);
-    });
-
-    for (let i = 0; i <= 18; i++) {
-        const el = document.getElementById(`bl-s-${i}`);
-        if (!el) continue;
-        const data = waveData[`bl-s-${i}`];
-        const wave = getWaveValue(t, data);
-        const wave = getWaveValue(t, data) * pulseStrength;
-
-        const startY = 450 + i * 20;
-        const cp1y = 700 + i * 22 + wave * 0.6;
-        const cp2x = 400 + i * 28 + wave * 0.45;
-        const cp2y = 1000 + wave * 0.35;
-        const endX = 850 + i * 35 + wave * 0.25;
-
-        el.setAttribute('d', `M0,${startY} C0,${cp1y} ${cp2x},${cp2y} ${endX},1080`);
-        
-        const opacity = 0.28 + Math.sin(t * 0.0005 + i * 0.3 + data.offset1 + 1) * 0.14;
-        el.style.opacity = Math.max(0.2, Math.min(0.5, opacity));
-    }
-}
-
-function animateWaves() {
-    time += 16;
-    animateTopRight(time);
-    animateBottomLeft(time);
-    clickWaveBoost.topRight *= 0.9;
-    clickWaveBoost.bottomLeft *= 0.9;
-    requestAnimationFrame(animateWaves);
-}
-
-// ==================== STARFIELD ANIMATION ====================
-const canvas = document.getElementById('starCanvas');
+const canvas = document.getElementById('bg');
 const ctx = canvas.getContext('2d');
+let W, H, stars = [], shooters = [], t = 0;
 
-let width, height;
-let stars = [];
-let shootingStars = [];
-const clickWaveBoost = {
-    topRight: 0,
-    bottomLeft: 0
-};
-
-const STAR_COUNT = 180;
-const SHOOTING_STAR_CHANCE = 0.01;
+const strandCount = 18;
+const strands = Array.from({ length: strandCount }, () => ({
+  phaseOffset: Math.random() * Math.PI * 2,
+  speedMult: 0.6 + Math.random() * 0.9,
+  ampMult: 0.5 + Math.random() * 1.0,
+  warpX: (Math.random() - 0.5) * 0.12,
+  warpY: (Math.random() - 0.5) * 0.12,
+}));
 
 function resize() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-    initStars();
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  initStars();
 }
 
-class Star {
-    constructor() {
-        this.reset();
-    }
-
-    reset() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.size = Math.random() * 1.8 + 0.5;
-        this.baseOpacity = Math.random() * 0.5 + 0.3;
-        this.twinkleSpeed = Math.random() * 0.008 + 0.004;
-        this.twinkleOffset = Math.random() * Math.PI * 2;
-    }
-@@ -159,53 +171,54 @@ class Star {
-
-    draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-        ctx.fill();
-    }
-}
-
-class ShootingStar {
-    constructor() {
-        this.reset();
-    }
-
-    reset() {
-        this.x = Math.random() * width * 0.4;
-        this.y = -80;
-        this.length = Math.random() * 120 + 60;
-        this.speed = Math.random() * 3.5 + 2;
-        this.angle = Math.PI / 4 + (Math.random() * 0.25 - 0.12);
-        this.opacity = 0;
-        this.active = false;
-        this.fadeIn = true;
-    }
-
-    activate() {
-        this.x = Math.random() * width * 0.3 + width * 0.15;
-        this.y = -80;
-    activate(originX = null, originY = null, angle = null) {
-        this.x = originX ?? (Math.random() * width * 0.3 + width * 0.15);
-        this.y = originY ?? -80;
-        this.angle = angle ?? (Math.PI / 4 + (Math.random() * 0.25 - 0.12));
-        this.opacity = 0;
-        this.active = true;
-        this.fadeIn = true;
-    }
-
-    update() {
-        if (!this.active) return;
-
-        this.x += Math.cos(this.angle) * this.speed;
-        this.y += Math.sin(this.angle) * this.speed;
-
-        if (this.fadeIn) {
-            this.opacity += 0.04;
-            if (this.opacity >= 0.9) this.fadeIn = false;
-        } else {
-            this.opacity -= 0.01;
-        }
-
-        if (this.opacity <= 0 || this.x > width + 150 || this.y > height + 150) {
-            this.active = false;
-            this.reset();
-        }
-    }
-
-    draw() {
-@@ -247,34 +260,79 @@ function initStars() {
-}
-
-let starTime = 0;
-function animateStars() {
-    starTime += 16;
-    ctx.clearRect(0, 0, width, height);
-
-    stars.forEach(star => {
-        star.update(starTime);
-        star.draw();
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 180; i++) {
+    stars.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.4 + 0.2,
+      twinkle: Math.random() * Math.PI * 2,
+      ts: Math.random() * 0.03 + 0.007,
+      drift: (Math.random() - 0.5) * 0.06
     });
+  }
+}
 
-    if (Math.random() < SHOOTING_STAR_CHANCE) {
-        const inactive = shootingStars.find(s => !s.active);
-        if (inactive) inactive.activate();
-    }
-
-    shootingStars.forEach(star => {
-        star.update();
-        star.draw();
+function spawnClickBurst(cx, cy) {
+  const count = 6 + Math.floor(Math.random() * 5);
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    shooters.push({
+      x: cx, y: cy,
+      len: 60 + Math.random() * 90,
+      angle,
+      life: 1,
+      speed: 4 + Math.random() * 6,
+      fromClick: true
     });
-
-    requestAnimationFrame(animateStars);
+  }
 }
 
-function createShootingStarBurst(mouseX, mouseY) {
-    const available = shootingStars.filter(star => !star.active).slice(0, 3);
-    const originX = Math.max(20, Math.min(width - 20, mouseX));
-    const originY = Math.max(20, Math.min(height - 20, mouseY));
-
-    available.forEach((star, index) => {
-        const angleSpread = (Math.random() - 0.5) * 0.55;
-        const baseAngle = Math.PI / 4 + angleSpread;
-        const jitterX = (Math.random() - 0.5) * 30;
-        const jitterY = (Math.random() - 0.5) * 30;
-
-        star.activate(
-            originX + jitterX,
-            originY + jitterY,
-            baseAngle + (index - 1) * 0.06
-        );
-    });
+function spawnRandom() {
+  const sx = W * 0.18 + Math.random() * W * 0.6;
+  const sy = H * 0.08 + Math.random() * H * 0.4;
+  const angle = Math.PI / 5 + (Math.random() - 0.5) * 0.5;
+  shooters.push({
+    x: sx, y: sy,
+    len: 80 + Math.random() * 80,
+    angle, life: 1,
+    speed: 5 + Math.random() * 4,
+    fromClick: false
+  });
 }
 
-function bumpWave(section) {
-    if (section === 'top-right') {
-        clickWaveBoost.topRight = 1;
-    } else if (section === 'bottom-left') {
-        clickWaveBoost.bottomLeft = 1;
-    }
-}
-
-function setupMouseInteractions() {
-    document.addEventListener('click', (event) => {
-        createShootingStarBurst(event.clientX, event.clientY);
-    });
-
-    const topRightZone = document.getElementById('top-right-zone');
-    const bottomLeftZone = document.getElementById('bottom-left-zone');
-
-    if (topRightZone) {
-        topRightZone.addEventListener('click', () => bumpWave('top-right'));
-    }
-
-    if (bottomLeftZone) {
-        bottomLeftZone.addEventListener('click', () => bumpWave('bottom-left'));
-    }
-}
-
-// ==================== INITIALIZE ====================
-document.addEventListener('DOMContentLoaded', () => {
-    initWaveData();
-    resize();
-    animateWaves();
-    animateStars();
-    setupMouseInteractions();
-    
-    window.addEventListener('resize', resize);
+canvas.addEventListener('click', e => {
+  spawnClickBurst(e.clientX, e.clientY);
 });
+
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  Array.from(e.touches).forEach(touch => {
+    spawnClickBurst(touch.clientX, touch.clientY);
+  });
+}, { passive: false });
+
+function drawCorner() {
+  const clipPath = new Path2D();
+  clipPath.moveTo(W, 0);
+  clipPath.lineTo(W * 0.34, 0);
+  clipPath.bezierCurveTo(W * 0.58, H * 0.06, W * 0.80, H * 0.20, W * 0.87, H * 0.44);
+  clipPath.bezierCurveTo(W * 0.91, H * 0.55, W * 0.95, H * 0.60, W, H * 0.63);
+  clipPath.closePath();
+
+  ctx.save();
+  ctx.clip(clipPath);
+
+  ctx.fillStyle = 'rgba(10, 11, 18, 0.95)';
+  ctx.fill(clipPath);
+
+  strands.forEach((s, i) => {
+    const prog = i / (strandCount - 1);
+    const wave1 = Math.sin(t * s.speedMult + s.phaseOffset) * W * 0.045 * s.ampMult;
+    const wave2 = Math.cos(t * s.speedMult * 0.7 + s.phaseOffset + 1.2) * H * 0.055 * s.ampMult;
+    const wave3 = Math.sin(t * s.speedMult * 1.3 + s.phaseOffset + 2.4) * W * 0.03 * s.ampMult;
+    const cp1x = W * (0.58 + s.warpX) + wave1;
+    const cp1y = H * (0.06 + s.warpY) + wave2 * 0.5;
+    const cp2x = W * (0.80 + s.warpX * 0.5) + wave3;
+    const cp2y = H * (0.20 + s.warpY * 0.5) + wave2;
+    const alpha = 0.06 + Math.abs(Math.sin(t * s.speedMult * 0.5 + s.phaseOffset)) * 0.16;
+
+    ctx.beginPath();
+    ctx.moveTo(W * (0.34 + prog * 0.66) + wave1 * 0.3, 0);
+    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, W, H * 0.63 * prog + wave2 * 0.3);
+    ctx.strokeStyle = `rgba(140, 175, 220, ${alpha})`;
+    ctx.lineWidth = 0.75 + Math.abs(Math.sin(t * s.speedMult + s.phaseOffset)) * 0.5;
+    ctx.stroke();
+  });
+
+  ctx.restore();
+
+  const edgePulse = 0.28 + 0.15 * Math.sin(t * 0.9);
+  ctx.beginPath();
+  ctx.moveTo(W * 0.34, 0);
+  ctx.bezierCurveTo(W * 0.58, H * 0.06, W * 0.80, H * 0.20, W * 0.87, H * 0.44);
+  ctx.bezierCurveTo(W * 0.91, H * 0.55, W * 0.95, H * 0.60, W, H * 0.63);
+  ctx.strokeStyle = `rgba(110, 150, 210, ${edgePulse})`;
+  ctx.lineWidth = 1.6;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(W * 0.36, 0);
+  ctx.bezierCurveTo(W * 0.59, H * 0.07, W * 0.81, H * 0.21, W * 0.88, H * 0.45);
+  ctx.bezierCurveTo(W * 0.92, H * 0.56, W * 0.96, H * 0.61, W, H * 0.64);
+  ctx.strokeStyle = `rgba(90, 130, 195, ${edgePulse * 0.35})`;
+  ctx.lineWidth = 5;
+  ctx.stroke();
+}
+
+function draw() {
+  ctx.fillStyle = '#0b0c10';
+  ctx.fillRect(0, 0, W, H);
+
+  const ng = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, W * 0.48);
+  ng.addColorStop(0, 'rgba(30, 32, 50, 0.22)');
+  ng.addColorStop(0.5, 'rgba(18, 19, 30, 0.12)');
+  ng.addColorStop(1, 'rgba(11, 12, 16, 0)');
+  ctx.fillStyle = ng;
+  ctx.fillRect(0, 0, W, H);
+
+  stars.forEach(s => {
+    s.twinkle += s.ts;
+    s.x += s.drift;
+    if (s.x < 0) s.x = W;
+    if (s.x > W) s.x = 0;
+    const alpha = 0.2 + 0.8 * Math.abs(Math.sin(s.twinkle));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(210, 218, 230, ${alpha})`;
+    ctx.fill();
+  });
+
+  if (Math.random() < 0.012) spawnRandom();
+  shooters = shooters.filter(s => s.life > 0);
+  shooters.forEach(sh => {
+    sh.x += Math.cos(sh.angle) * sh.speed;
+    sh.y += Math.sin(sh.angle) * sh.speed;
+    sh.life -= sh.fromClick ? 0.025 : 0.02;
+
+    const tx = sh.x - Math.cos(sh.angle) * sh.len;
+    const ty = sh.y - Math.sin(sh.angle) * sh.len;
+    const g = ctx.createLinearGradient(tx, ty, sh.x, sh.y);
+    g.addColorStop(0, 'rgba(255,255,255,0)');
+    g.addColorStop(0.6, `rgba(210,225,255,${sh.life * 0.45})`);
+    g.addColorStop(1, `rgba(255,255,255,${sh.life})`);
+
+    ctx.beginPath();
+    ctx.moveTo(tx, ty);
+    ctx.lineTo(sh.x, sh.y);
+    ctx.strokeStyle = g;
+    ctx.lineWidth = sh.fromClick ? 1.8 : 1.4;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(sh.x, sh.y, sh.fromClick ? 2.2 : 1.6, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${sh.life})`;
+    ctx.fill();
+  });
+
+  drawCorner();
+
+  ctx.save();
+  ctx.translate(W, H);
+  ctx.rotate(Math.PI);
+  drawCorner();
+  ctx.restore();
+
+  t += 0.016;
+  requestAnimationFrame(draw);
+}
+
+window.addEventListener('resize', resize);
+resize();
+draw();
